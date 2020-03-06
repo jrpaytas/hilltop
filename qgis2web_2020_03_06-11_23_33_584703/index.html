@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/BuildableResParcels_1.js"></script>
+        <script src="data/Alleys_2.js"></script>
+        <script src="data/AllentownBoundary_3.js"></script>
+        <script src="data/Sloped_4.js"></script>
+        <script src="data/Owners_5.js"></script>
+        <script src="data/TDAmount_6.js"></script>
+        <script src="data/TDYears_7.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'feet',
+            secondaryLengthUnit: 'miles',
+            primaryAreaUnit: 'sqfeet',
+            secondaryAreaUnit: 'sqmiles'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_BuildableResParcels_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PIN'] !== null ? Autolinker.link(feature.properties['PIN'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAPBLOCKLO'] !== null ? Autolinker.link(feature.properties['MAPBLOCKLO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MUNICODE'] !== null ? Autolinker.link(feature.properties['MUNICODE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CALCACREAG'] !== null ? Autolinker.link(feature.properties['CALCACREAG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NOTES'] !== null ? Autolinker.link(feature.properties['NOTES'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PSEUDONO'] !== null ? Autolinker.link(feature.properties['PSEUDONO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDBY'] !== null ? Autolinker.link(feature.properties['MODIFIEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDON'] !== null ? Autolinker.link(feature.properties['MODIFIEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDBY'] !== null ? Autolinker.link(feature.properties['CREATEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDON'] !== null ? Autolinker.link(feature.properties['CREATEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMMENTS'] !== null ? Autolinker.link(feature.properties['COMMENTS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(feature.properties['Shape_Leng'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(feature.properties['Shape_Area'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PROPERTYHOUSENUM'] !== null ? Autolinker.link(feature.properties['AllentownValues_PROPERTYHOUSENUM'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PROPERTYADDRESS'] !== null ? Autolinker.link(feature.properties['AllentownValues_PROPERTYADDRESS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PROPERTYCITY'] !== null ? Autolinker.link(feature.properties['AllentownValues_PROPERTYCITY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PROPERTYSTATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_PROPERTYSTATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PROPERTYZIP'] !== null ? Autolinker.link(feature.properties['AllentownValues_PROPERTYZIP'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_LEGAL1'] !== null ? Autolinker.link(feature.properties['AllentownValues_LEGAL1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_LEGAL2'] !== null ? Autolinker.link(feature.properties['AllentownValues_LEGAL2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_LEGAL3'] !== null ? Autolinker.link(feature.properties['AllentownValues_LEGAL3'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_TAXDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_TAXDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_OWNERDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_OWNERDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CLASSDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_CLASSDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_USEUPDATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_USEUPDATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_USEDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_USEDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_SLOPE'] !== null ? Autolinker.link(feature.properties['AllentownValues_SLOPE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_BuildPotential'] !== null ? Autolinker.link(feature.properties['AllentownValues_BuildPotential'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ResBuildPotential'] !== null ? Autolinker.link(feature.properties['AllentownValues_ResBuildPotential'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_LOTAREA'] !== null ? Autolinker.link(feature.properties['AllentownValues_LOTAREA'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_HOMESTEADFLAG'] !== null ? Autolinker.link(feature.properties['AllentownValues_HOMESTEADFLAG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ABATEMENTFLAG'] !== null ? Autolinker.link(feature.properties['AllentownValues_ABATEMENTFLAG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_RECORDDATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_RECORDDATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_SALEDATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_SALEDATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_SALEPRICE'] !== null ? Autolinker.link(feature.properties['AllentownValues_SALEPRICE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_SALECODE'] !== null ? Autolinker.link(feature.properties['AllentownValues_SALECODE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_SALEDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_SALEDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_DEEDBOOK'] !== null ? Autolinker.link(feature.properties['AllentownValues_DEEDBOOK'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_DEEDPAGE'] !== null ? Autolinker.link(feature.properties['AllentownValues_DEEDPAGE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PREVSALEDATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_PREVSALEDATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PREVSALEPRICE'] !== null ? Autolinker.link(feature.properties['AllentownValues_PREVSALEPRICE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PREVSALEDATE2'] !== null ? Autolinker.link(feature.properties['AllentownValues_PREVSALEDATE2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_PREVSALEPRICE2'] !== null ? Autolinker.link(feature.properties['AllentownValues_PREVSALEPRICE2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CHANGENOTICEADDRESS1'] !== null ? Autolinker.link(feature.properties['AllentownValues_CHANGENOTICEADDRESS1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CHANGENOTICEADDRESS2'] !== null ? Autolinker.link(feature.properties['AllentownValues_CHANGENOTICEADDRESS2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CHANGENOTICEADDRESS3'] !== null ? Autolinker.link(feature.properties['AllentownValues_CHANGENOTICEADDRESS3'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CHANGENOTICEADDRESS4'] !== null ? Autolinker.link(feature.properties['AllentownValues_CHANGENOTICEADDRESS4'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_COUNTYBUILDING'] !== null ? Autolinker.link(feature.properties['AllentownValues_COUNTYBUILDING'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_COUNTYLAND'] !== null ? Autolinker.link(feature.properties['AllentownValues_COUNTYLAND'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_COUNTYTOTAL'] !== null ? Autolinker.link(feature.properties['AllentownValues_COUNTYTOTAL'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_COUNTYEXEMPTBLDG'] !== null ? Autolinker.link(feature.properties['AllentownValues_COUNTYEXEMPTBLDG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FAIRMARKETBUILDING'] !== null ? Autolinker.link(feature.properties['AllentownValues_FAIRMARKETBUILDING'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FAIRMARKETLAND'] !== null ? Autolinker.link(feature.properties['AllentownValues_FAIRMARKETLAND'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FAIRMARKETTOTAL'] !== null ? Autolinker.link(feature.properties['AllentownValues_FAIRMARKETTOTAL'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_STYLE'] !== null ? Autolinker.link(feature.properties['AllentownValues_STYLE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_STYLEDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_STYLEDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_STORIES'] !== null ? Autolinker.link(feature.properties['AllentownValues_STORIES'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_YEARBLT'] !== null ? Autolinker.link(feature.properties['AllentownValues_YEARBLT'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_EXTERIORFINISH'] !== null ? Autolinker.link(feature.properties['AllentownValues_EXTERIORFINISH'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_EXTFINISH_DESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_EXTFINISH_DESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ROOF'] !== null ? Autolinker.link(feature.properties['AllentownValues_ROOF'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ROOFDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_ROOFDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_BASEMENT'] !== null ? Autolinker.link(feature.properties['AllentownValues_BASEMENT'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_BASEMENTDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_BASEMENTDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_GRADE'] !== null ? Autolinker.link(feature.properties['AllentownValues_GRADE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_GRADEDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_GRADEDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CONDITION'] !== null ? Autolinker.link(feature.properties['AllentownValues_CONDITION'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CONDITIONDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_CONDITIONDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CDU'] !== null ? Autolinker.link(feature.properties['AllentownValues_CDU'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CDUDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_CDUDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_TOTALROOMS'] !== null ? Autolinker.link(feature.properties['AllentownValues_TOTALROOMS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_BEDROOMS'] !== null ? Autolinker.link(feature.properties['AllentownValues_BEDROOMS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FULLBATHS'] !== null ? Autolinker.link(feature.properties['AllentownValues_FULLBATHS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_HALFBATHS'] !== null ? Autolinker.link(feature.properties['AllentownValues_HALFBATHS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_HEATINGCOOLING'] !== null ? Autolinker.link(feature.properties['AllentownValues_HEATINGCOOLING'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_HEATINGCOOLINGDESC'] !== null ? Autolinker.link(feature.properties['AllentownValues_HEATINGCOOLINGDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FIREPLACES'] !== null ? Autolinker.link(feature.properties['AllentownValues_FIREPLACES'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_BSMTGARAGE'] !== null ? Autolinker.link(feature.properties['AllentownValues_BSMTGARAGE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FINISHEDLIVINGAREA'] !== null ? Autolinker.link(feature.properties['AllentownValues_FINISHEDLIVINGAREA'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_CARDNUMBER'] !== null ? Autolinker.link(feature.properties['AllentownValues_CARDNUMBER'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ALT_ID'] !== null ? Autolinker.link(feature.properties['AllentownValues_ALT_ID'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_TAXYEAR'] !== null ? Autolinker.link(feature.properties['AllentownValues_TAXYEAR'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_ASOFDATE'] !== null ? Autolinker.link(feature.properties['AllentownValues_ASOFDATE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_FMV-SF'] !== null ? Autolinker.link(feature.properties['AllentownValues_FMV-SF'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_Sale-SF'] !== null ? Autolinker.link(feature.properties['AllentownValues_Sale-SF'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_Sale-YR'] !== null ? Autolinker.link(feature.properties['AllentownValues_Sale-YR'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_DaysPrevSale1'] !== null ? Autolinker.link(feature.properties['AllentownValues_DaysPrevSale1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_Change Sale Price1'] !== null ? Autolinker.link(feature.properties['AllentownValues_Change Sale Price1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_DaysPrevSale2'] !== null ? Autolinker.link(feature.properties['AllentownValues_DaysPrevSale2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_Change Sale Price2'] !== null ? Autolinker.link(feature.properties['AllentownValues_Change Sale Price2'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AllentownValues_HAWork'] !== null ? Autolinker.link(feature.properties['AllentownValues_HAWork'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        var pattern_BuildableResParcels_1_0 = new L.StripePattern({
+            weight: 0.3,
+            spaceWeight: 2.0,
+            color: '#000000',
+            opacity: 1.0,
+            spaceOpacity: 0,
+            angle: 315
+        });
+        pattern_BuildableResParcels_1_0.addTo(map);
+        function style_BuildableResParcels_1_0(feature) {
+            switch(String(feature.properties['AllentownValues_ResBuildPotential'])) {
+                case 'Buildable-APART: 5-19 UNITS':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(83,70,200,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-BUILDERS LOT':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(186,46,204,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-RETL/APT\'S OVER':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,114,201,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-ROWHOUSE':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(16,228,51,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-SINGLE FAMILY':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(21,136,33,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-THREE FAMILY':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(106,156,227,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-TWO FAMILY':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(154,205,24,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-VACANT COMMERCIAL LAND':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,247,35,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Buildable-VACANT LAND':
+                    return {
+                pane: 'pane_BuildableResParcels_1',
+                stroke: false,
+                fillOpacity: 1,
+                fillPattern: pattern_BuildableResParcels_1_0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_BuildableResParcels_1');
+        map.getPane('pane_BuildableResParcels_1').style.zIndex = 401;
+        map.getPane('pane_BuildableResParcels_1').style['mix-blend-mode'] = 'normal';
+        var layer_BuildableResParcels_1 = new L.geoJson(json_BuildableResParcels_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_BuildableResParcels_1',
+            layerName: 'layer_BuildableResParcels_1',
+            pane: 'pane_BuildableResParcels_1',
+            onEachFeature: pop_BuildableResParcels_1,
+            style: style_BuildableResParcels_1_0,
+        });
+        bounds_group.addLayer(layer_BuildableResParcels_1);
+        map.addLayer(layer_BuildableResParcels_1);
+        function pop_Alleys_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PIN'] !== null ? Autolinker.link(feature.properties['PIN'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAPBLOCKLO'] !== null ? Autolinker.link(feature.properties['MAPBLOCKLO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MUNICODE'] !== null ? Autolinker.link(feature.properties['MUNICODE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CALCACREAG'] !== null ? Autolinker.link(feature.properties['CALCACREAG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NOTES'] !== null ? Autolinker.link(feature.properties['NOTES'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PSEUDONO'] !== null ? Autolinker.link(feature.properties['PSEUDONO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDBY'] !== null ? Autolinker.link(feature.properties['MODIFIEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDON'] !== null ? Autolinker.link(feature.properties['MODIFIEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDBY'] !== null ? Autolinker.link(feature.properties['CREATEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDON'] !== null ? Autolinker.link(feature.properties['CREATEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMMENTS'] !== null ? Autolinker.link(feature.properties['COMMENTS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(feature.properties['Shape_Leng'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(feature.properties['Shape_Area'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Alleys_PROPERTYHOUSENUM'] !== null ? Autolinker.link(feature.properties['Alleys_PROPERTYHOUSENUM'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Alleys_PROPERTYADDRESS'] !== null ? Autolinker.link(feature.properties['Alleys_PROPERTYADDRESS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Alleys_Alley'] !== null ? Autolinker.link(feature.properties['Alleys_Alley'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Alleys_2_0(feature) {
+            switch(String(feature.properties['Alleys_Alley'])) {
+                case 'Alley':
+                    return {
+                pane: 'pane_Alleys_2',
+                opacity: 1,
+                color: 'rgba(247,14,37,1.0)',
+                dashArray: '1,5',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Not Alley':
+                    return {
+                pane: 'pane_Alleys_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(228,238,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_Alleys_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(205,29,194,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Alleys_2');
+        map.getPane('pane_Alleys_2').style.zIndex = 402;
+        map.getPane('pane_Alleys_2').style['mix-blend-mode'] = 'normal';
+        var layer_Alleys_2 = new L.geoJson(json_Alleys_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Alleys_2',
+            layerName: 'layer_Alleys_2',
+            pane: 'pane_Alleys_2',
+            onEachFeature: pop_Alleys_2,
+            style: style_Alleys_2_0,
+        });
+        bounds_group.addLayer(layer_Alleys_2);
+        map.addLayer(layer_Alleys_2);
+        function pop_AllentownBoundary_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['objectid'] !== null ? Autolinker.link(feature.properties['objectid'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid_blockg'] !== null ? Autolinker.link(feature.properties['fid_blockg'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['statefp10'] !== null ? Autolinker.link(feature.properties['statefp10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['countyfp10'] !== null ? Autolinker.link(feature.properties['countyfp10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tractce10'] !== null ? Autolinker.link(feature.properties['tractce10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['blkgrpce10'] !== null ? Autolinker.link(feature.properties['blkgrpce10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['geoid10'] !== null ? Autolinker.link(feature.properties['geoid10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['namelsad10'] !== null ? Autolinker.link(feature.properties['namelsad10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['mtfcc10'] !== null ? Autolinker.link(feature.properties['mtfcc10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['funcstat10'] !== null ? Autolinker.link(feature.properties['funcstat10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['aland10'] !== null ? Autolinker.link(feature.properties['aland10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['awater10'] !== null ? Autolinker.link(feature.properties['awater10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['intptlat10'] !== null ? Autolinker.link(feature.properties['intptlat10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['intptlon10'] !== null ? Autolinker.link(feature.properties['intptlon10'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape_leng'] !== null ? Autolinker.link(feature.properties['shape_leng'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid_neighb'] !== null ? Autolinker.link(feature.properties['fid_neighb'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['area'] !== null ? Autolinker.link(feature.properties['area'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['perimeter'] !== null ? Autolinker.link(feature.properties['perimeter'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['neighbor_'] !== null ? Autolinker.link(feature.properties['neighbor_'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['neighbor_i'] !== null ? Autolinker.link(feature.properties['neighbor_i'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['hood'] !== null ? Autolinker.link(feature.properties['hood'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['hood_no'] !== null ? Autolinker.link(feature.properties['hood_no'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['acres'] !== null ? Autolinker.link(feature.properties['acres'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['sqmiles'] !== null ? Autolinker.link(feature.properties['sqmiles'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['dpwdiv'] !== null ? Autolinker.link(feature.properties['dpwdiv'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['unique_id'] !== null ? Autolinker.link(feature.properties['unique_id'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['sectors'] !== null ? Autolinker.link(feature.properties['sectors'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape_le_1'] !== null ? Autolinker.link(feature.properties['shape_le_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape_ar_1'] !== null ? Autolinker.link(feature.properties['shape_ar_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['page_numbe'] !== null ? Autolinker.link(feature.properties['page_numbe'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['plannerass'] !== null ? Autolinker.link(feature.properties['plannerass'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['created_us'] !== null ? Autolinker.link(feature.properties['created_us'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['created_da'] !== null ? Autolinker.link(feature.properties['created_da'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['last_edite'] !== null ? Autolinker.link(feature.properties['last_edite'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['last_edi_1'] !== null ? Autolinker.link(feature.properties['last_edi_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape__Are'] !== null ? Autolinker.link(feature.properties['Shape__Are'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape__Len'] !== null ? Autolinker.link(feature.properties['Shape__Len'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_AllentownBoundary_3_0() {
+            return {
+                pane: 'pane_AllentownBoundary_3',
+                opacity: 1,
+                color: 'rgba(51,160,44,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_AllentownBoundary_3');
+        map.getPane('pane_AllentownBoundary_3').style.zIndex = 403;
+        map.getPane('pane_AllentownBoundary_3').style['mix-blend-mode'] = 'normal';
+        var layer_AllentownBoundary_3 = new L.geoJson(json_AllentownBoundary_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_AllentownBoundary_3',
+            layerName: 'layer_AllentownBoundary_3',
+            pane: 'pane_AllentownBoundary_3',
+            onEachFeature: pop_AllentownBoundary_3,
+            style: style_AllentownBoundary_3_0,
+        });
+        bounds_group.addLayer(layer_AllentownBoundary_3);
+        map.addLayer(layer_AllentownBoundary_3);
+        function pop_Sloped_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['objectid_1'] !== null ? Autolinker.link(feature.properties['objectid_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['objectid'] !== null ? Autolinker.link(feature.properties['objectid'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['created_us'] !== null ? Autolinker.link(feature.properties['created_us'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['created_da'] !== null ? Autolinker.link(feature.properties['created_da'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['last_edite'] !== null ? Autolinker.link(feature.properties['last_edite'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['last_edi_1'] !== null ? Autolinker.link(feature.properties['last_edi_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['slope25'] !== null ? Autolinker.link(feature.properties['slope25'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape__are'] !== null ? Autolinker.link(feature.properties['shape__are'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape__len'] !== null ? Autolinker.link(feature.properties['shape__len'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape__A_1'] !== null ? Autolinker.link(feature.properties['Shape__A_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape__L_1'] !== null ? Autolinker.link(feature.properties['Shape__L_1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Sloped_4_0() {
+            return {
+                pane: 'pane_Sloped_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,82,45,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Sloped_4');
+        map.getPane('pane_Sloped_4').style.zIndex = 404;
+        map.getPane('pane_Sloped_4').style['mix-blend-mode'] = 'normal';
+        var layer_Sloped_4 = new L.geoJson(json_Sloped_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Sloped_4',
+            layerName: 'layer_Sloped_4',
+            pane: 'pane_Sloped_4',
+            onEachFeature: pop_Sloped_4,
+            style: style_Sloped_4_0,
+        });
+        bounds_group.addLayer(layer_Sloped_4);
+        map.addLayer(layer_Sloped_4);
+        function pop_Owners_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PIN'] !== null ? Autolinker.link(feature.properties['PIN'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAPBLOCKLO'] !== null ? Autolinker.link(feature.properties['MAPBLOCKLO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MUNICODE'] !== null ? Autolinker.link(feature.properties['MUNICODE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CALCACREAG'] !== null ? Autolinker.link(feature.properties['CALCACREAG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NOTES'] !== null ? Autolinker.link(feature.properties['NOTES'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['PSEUDONO'] !== null ? Autolinker.link(feature.properties['PSEUDONO'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDBY'] !== null ? Autolinker.link(feature.properties['MODIFIEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODIFIEDON'] !== null ? Autolinker.link(feature.properties['MODIFIEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDBY'] !== null ? Autolinker.link(feature.properties['CREATEDBY'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CREATEDON'] !== null ? Autolinker.link(feature.properties['CREATEDON'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMMENTS'] !== null ? Autolinker.link(feature.properties['COMMENTS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(feature.properties['Shape_Leng'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(feature.properties['Shape_Area'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_ParcelADDRESS'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_ParcelADDRESS'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_CLASSDESC'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_CLASSDESC'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_CHANGENOTICEADDRESS1'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_CHANGENOTICEADDRESS1'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_HOMESTEADFLAG__asmt'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_HOMESTEADFLAG__asmt'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_ADDRESSMATCH'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_ADDRESSMATCH'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_HOM or Match'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_HOM or Match'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OwnerOccupied_OwnerOccupied'] !== null ? Autolinker.link(feature.properties['OwnerOccupied_OwnerOccupied'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+        function style_Owners_5_0(feature) {
+            var context = {
+                feature: feature,
+                variables: {}
+            };
+            // Start of if blocks and style check logic
+            if (exp_Owners_5rule0_eval_expression(context)) {
+                  return {
+                pane: 'pane_Owners_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,127,0,1.0)',
+                interactive: true,
+            };
+                }
+            else {
+                return {fill: false, stroke: false};
+            }
+        }
+        map.createPane('pane_Owners_5');
+        map.getPane('pane_Owners_5').style.zIndex = 405;
+        map.getPane('pane_Owners_5').style['mix-blend-mode'] = 'normal';
+        var layer_Owners_5 = new L.geoJson(json_Owners_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Owners_5',
+            layerName: 'layer_Owners_5',
+            pane: 'pane_Owners_5',
+            onEachFeature: pop_Owners_5,
+            style: style_Owners_5_0,
+        });
+        bounds_group.addLayer(layer_Owners_5);
+        map.addLayer(layer_Owners_5);
+        function pop_TDAmount_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pin'] !== null ? Autolinker.link(feature.properties['pin'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['address'] !== null ? Autolinker.link(feature.properties['address'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['billing_city'] !== null ? Autolinker.link(feature.properties['billing_city'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['current_delq'] !== null ? Autolinker.link(feature.properties['current_delq'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['prior_years'] !== null ? Autolinker.link(feature.properties['prior_years'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['state_description'] !== null ? Autolinker.link(feature.properties['state_description'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['neighborhood'] !== null ? Autolinker.link(feature.properties['neighborhood'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['council_district'] !== null ? Autolinker.link(feature.properties['council_district'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ward'] !== null ? Autolinker.link(feature.properties['ward'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tact'] !== null ? Autolinker.link(feature.properties['tact'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['public_works_division'] !== null ? Autolinker.link(feature.properties['public_works_division'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pli_division'] !== null ? Autolinker.link(feature.properties['pli_division'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['police_zone'] !== null ? Autolinker.link(feature.properties['police_zone'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fire_zone'] !== null ? Autolinker.link(feature.properties['fire_zone'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['longitude'] !== null ? Autolinker.link(feature.properties['longitude'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['latitude'] !== null ? Autolinker.link(feature.properties['latitude'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TDAmount_6_0(feature) {
+            if (feature.properties['current_delq'] >= 0.580000 && feature.properties['current_delq'] <= 1000.000000 ) {
+                return {
+                pane: 'pane_TDAmount_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['current_delq'] >= 1000.000000 && feature.properties['current_delq'] <= 2000.000000 ) {
+                return {
+                pane: 'pane_TDAmount_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,170,170,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['current_delq'] >= 2000.000000 && feature.properties['current_delq'] <= 3000.000000 ) {
+                return {
+                pane: 'pane_TDAmount_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,85,85,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['current_delq'] >= 3000.000000 && feature.properties['current_delq'] <= 3244.820000 ) {
+                return {
+                pane: 'pane_TDAmount_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_TDAmount_6');
+        map.getPane('pane_TDAmount_6').style.zIndex = 406;
+        map.getPane('pane_TDAmount_6').style['mix-blend-mode'] = 'normal';
+        var layer_TDAmount_6 = new L.geoJson(json_TDAmount_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TDAmount_6',
+            layerName: 'layer_TDAmount_6',
+            pane: 'pane_TDAmount_6',
+            onEachFeature: pop_TDAmount_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TDAmount_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TDAmount_6);
+        map.addLayer(layer_TDAmount_6);
+        function pop_TDYears_7(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pin'] !== null ? Autolinker.link(feature.properties['pin'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['address'] !== null ? Autolinker.link(feature.properties['address'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['billing_city'] !== null ? Autolinker.link(feature.properties['billing_city'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['current_delq'] !== null ? Autolinker.link(feature.properties['current_delq'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['prior_years'] !== null ? Autolinker.link(feature.properties['prior_years'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['state_description'] !== null ? Autolinker.link(feature.properties['state_description'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['neighborhood'] !== null ? Autolinker.link(feature.properties['neighborhood'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['council_district'] !== null ? Autolinker.link(feature.properties['council_district'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ward'] !== null ? Autolinker.link(feature.properties['ward'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['tact'] !== null ? Autolinker.link(feature.properties['tact'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['public_works_division'] !== null ? Autolinker.link(feature.properties['public_works_division'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pli_division'] !== null ? Autolinker.link(feature.properties['pli_division'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['police_zone'] !== null ? Autolinker.link(feature.properties['police_zone'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fire_zone'] !== null ? Autolinker.link(feature.properties['fire_zone'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['longitude'] !== null ? Autolinker.link(feature.properties['longitude'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['latitude'] !== null ? Autolinker.link(feature.properties['latitude'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TDYears_7_0(feature) {
+            if (feature.properties['prior_years'] >= 0.000000 && feature.properties['prior_years'] <= 3.000000 ) {
+                return {
+                pane: 'pane_TDYears_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['prior_years'] >= 3.000000 && feature.properties['prior_years'] <= 10.000000 ) {
+                return {
+                pane: 'pane_TDYears_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,170,170,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['prior_years'] >= 10.000000 && feature.properties['prior_years'] <= 15.000000 ) {
+                return {
+                pane: 'pane_TDYears_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,85,85,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['prior_years'] >= 15.000000 && feature.properties['prior_years'] <= 18.000000 ) {
+                return {
+                pane: 'pane_TDYears_7',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,0,0,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_TDYears_7');
+        map.getPane('pane_TDYears_7').style.zIndex = 407;
+        map.getPane('pane_TDYears_7').style['mix-blend-mode'] = 'normal';
+        var layer_TDYears_7 = new L.geoJson(json_TDYears_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TDYears_7',
+            layerName: 'layer_TDYears_7',
+            pane: 'pane_TDYears_7',
+            onEachFeature: pop_TDYears_7,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TDYears_7_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TDYears_7);
+        map.addLayer(layer_TDYears_7);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'TD Years<br /><table><tr><td style="text-align: center;"><img src="legend/TDYears_7_00300.png" /></td><td> 0.0 - 3.0 </td></tr><tr><td style="text-align: center;"><img src="legend/TDYears_7_301001.png" /></td><td> 3.0 - 10.0 </td></tr><tr><td style="text-align: center;"><img src="legend/TDYears_7_1001502.png" /></td><td> 10.0 - 15.0 </td></tr><tr><td style="text-align: center;"><img src="legend/TDYears_7_1501803.png" /></td><td> 15.0 - 18.0 </td></tr></table>': layer_TDYears_7,'TD Amount<br /><table><tr><td style="text-align: center;"><img src="legend/TDAmount_6_110000.png" /></td><td>$ 1 - $1000 </td></tr><tr><td style="text-align: center;"><img src="legend/TDAmount_6_100020001.png" /></td><td>$ 1000 - $2000 </td></tr><tr><td style="text-align: center;"><img src="legend/TDAmount_6_200030002.png" /></td><td>$ 2000 - $3000 </td></tr><tr><td style="text-align: center;"><img src="legend/TDAmount_6_300032453.png" /></td><td>$ 3000 - $3245 </td></tr></table>': layer_TDAmount_6,'Owners<br /><table><tr><td style="text-align: center;"><img src="legend/Owners_5_0.png" /></td><td></td></tr></table>': layer_Owners_5,'<img src="legend/Sloped_4.png" /> Sloped': layer_Sloped_4,'<img src="legend/AllentownBoundary_3.png" /> AllentownBoundary': layer_AllentownBoundary_3,'Alleys<br /><table><tr><td style="text-align: center;"><img src="legend/Alleys_2_Alley0.png" /></td><td>Alley</td></tr><tr><td style="text-align: center;"><img src="legend/Alleys_2_NotAlley1.png" /></td><td>Not Alley</td></tr><tr><td style="text-align: center;"><img src="legend/Alleys_2_2.png" /></td><td></td></tr></table>': layer_Alleys_2,'BuildableResParcels<br /><table><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableAPART519UNITS0.png" /></td><td>Buildable-APART: 5-19 UNITS</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableBUILDERSLOT1.png" /></td><td>Buildable-BUILDERS LOT</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableRETLAPTSOVER2.png" /></td><td>Buildable-RETL/APT\'S OVER</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableROWHOUSE3.png" /></td><td>Buildable-ROWHOUSE</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableSINGLEFAMILY4.png" /></td><td>Buildable-SINGLE FAMILY</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableTHREEFAMILY5.png" /></td><td>Buildable-THREE FAMILY</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableTWOFAMILY6.png" /></td><td>Buildable-TWO FAMILY</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableVACANTCOMMERCIALLAND7.png" /></td><td>Buildable-VACANT COMMERCIAL LAND</td></tr><tr><td style="text-align: center;"><img src="legend/BuildableResParcels_1_BuildableVACANTLAND8.png" /></td><td>Buildable-VACANT LAND</td></tr></table>': layer_BuildableResParcels_1,"OSM Standard": layer_OSMStandard_0,}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_BuildableResParcels_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'PIN'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        </script>
+    </body>
+</html>
